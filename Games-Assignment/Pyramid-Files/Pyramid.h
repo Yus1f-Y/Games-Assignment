@@ -83,10 +83,12 @@ public:
     bool game_is_over() {
 
         if (is_win() || is_draw()) {
-            turns[0][0] = turns[0][1] = turns[0][2] = turns[0][3] = turns[0][4] = turns[1][0] = turns[1][1] =
-            turns[1][2] = turns[2][0] = ' ';
+            turns[0][0] = ' ', turns[0][1] = ' ', turns[0][2] = ' ',
+            turns[0][3] = ' ', turns[0][4] = ' ', turns[1][0] = ' ',
+            turns[1][1] = ' ', turns[1][2] = ' ', turns[2][0] = ' ';
+            return true;
         }
-        return (is_win() || is_draw());
+        return false;
     }
 
 };
