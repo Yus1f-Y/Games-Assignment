@@ -51,7 +51,7 @@ private:
         }
     }
 
-    static void playerTurn(Player<T>* player, Board<T>& board) {
+    /*static void playerTurn(Player<T>* player, Board<T>& board) {
         int x, y;
         while (true) {
             player->getmove(x, y);
@@ -61,7 +61,7 @@ private:
                 cout << "Invalid move. Try again.\n";
             }
         }
-    }
+    }*/
 
     static void announceWinner(Player<T>* winner) {
         cout << "The winner is " << winner->getname() << "!\n";
@@ -70,55 +70,51 @@ private:
 public:
 
     void startGame(Board<T>& board) {
-        cout << "Welcome to the game!\n";
-        bool vsComputer;
-        if(menu1() == 1) {
-            vsComputer = false;
-        }else {
-            vsComputer = true;
-        }
-
-        setPlayers(vsComputer);
-
-
-        Player<T>* players[2];
-        players[1] = firstPlayer;
-        players[2] = secondPlayer;
-
-        //GameManager<T>Pyramidgame(&board, players);
-        //Pyramidgame.run();
-
-
         while (true) {
 
-
-
-            numGames++;
-
-            while (!board.game_is_over()) {
-                board.display_board();
-                playerTurn(firstPlayer, board);
-                board.display_board();
-                if (board.is_win()) {
-                    announceWinner(firstPlayer);
-                    break;
-                }
-                if (board.is_draw()) {
-                    cout << "It's a draw!\n";
-                    break;
-                }
-
-                playerTurn(secondPlayer, board);
-                board.display_board();
-                if (board.is_win()) {
-                    announceWinner(secondPlayer);
-                    break;
-                }
-                if (board.is_draw()) {
-                    cout << "It's a draw!\n";
-                    break;
-                }
+            cout << "Welcome to the game!\n";
+            bool vsComputer;
+            if(menu1() == 1) {
+                vsComputer = false;
+            }else {
+                vsComputer = true;
             }
+
+            setPlayers(vsComputer);
+
+
+            Player<T>* players[2];
+            players[0] = firstPlayer;
+            players[1] = secondPlayer;
+
+            GameManager<T>game(&board, players);
+            game.run();
+
+                        /*
+                        while (!board.game_is_over()) {
+                            board.display_board();
+                            playerTurn(firstPlayer, board);
+                            board.display_board();
+                            if (board.is_win()) {
+                                announceWinner(firstPlayer);
+                                break;
+                            }
+                            if (board.is_draw()) {
+                                cout << "It's a draw!\n";
+                                break;
+                            }
+
+                            playerTurn(secondPlayer, board);
+                            board.display_board();
+                            if (board.is_win()) {
+                                announceWinner(secondPlayer);
+                                break;
+                            }
+                            if (board.is_draw()) {
+                                cout << "It's a draw!\n";
+                                break;
+                            }
+                        }*/
 
             if (menu2() == 2) {
                 cout << "Goodbye!\n";
