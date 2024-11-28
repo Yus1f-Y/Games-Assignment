@@ -3,8 +3,13 @@
 #include "pyramidplay.h"
 int main()
 {
-    PlayPyramidGame<char>p;
-    PyramidBoard<char> b;
+
+    PlayPyramidGame<char>a;
+    PyramidBoard<char> c;
+    a.startGame(c);
+
+    PlayNumericGame<int>p;
+    NumericBoard<int> b;
     p.startGame(b);
     return 0;
 }
