@@ -76,43 +76,57 @@ private:
 public:
 
     void startGame(Board<T>& board) {
-        cout << "Welcome to the game!\n";
-        bool vsComputer;
-        if(menu1() == 1) {
-            vsComputer = false;
-        }else {
-            vsComputer = true;
-        }
-
-        setPlayers(vsComputer);
-
-
         while (true) {
-
-            while (!board.game_is_over()) {
-                board.display_board();
-                playerTurn(firstPlayer, &board);
-                board.display_board();
-                if (board.is_win()) {
-                    announceWinner(firstPlayer);
-                    break;
-                }
-                if (board.is_draw()) {
-                    cout << "It's a draw!\n";
-                    break;
-                }
-
-                playerTurn(secondPlayer, &board);
-                board.display_board();
-                if (board.is_win()) {
-                    announceWinner(secondPlayer);
-                    break;
-                }
-                if (board.is_draw()) {
-                    cout << "It's a draw!\n";
-                    break;
-                }
+            cout << "Welcome to the game!\n";
+            bool vsComputer;
+            if(menu1() == 1) {
+                vsComputer = false;
+            }else {
+                vsComputer = true;
             }
+
+            setPlayers(vsComputer);
+
+
+            Player<T>* players[2];
+            players[0] = firstPlayer;
+            players[1] = secondPlayer;
+
+            GameManager<T>game(&board, players);
+            game.run();
+
+            /*while (true) {
+
+                while (!board.game_is_over()) {
+                    board.display_board();
+                    playerTurn(firstPlayer, &board);
+                    board.display_board();
+                    if (board.is_win()) {
+                        announceWinner(firstPlayer);
+                        break;
+                    }
+                    if (board.is_draw()) {
+                        cout << "It's a draw!\n";
+                        break;
+                    }
+
+                    playerTurn(secondPlayer, &board);
+                    board.display_board();
+                    if (board.is_win()) {
+                        announceWinner(secondPlayer);
+                        break;
+                    }
+                    if (board.is_draw()) {
+                        cout << "It's a draw!\n";
+                        break;
+                    }
+                }
+
+                if (menu2() == 2) {
+                    cout << "Goodbye!\n";
+                    break;
+                }
+            }*/
 
             if (menu2() == 2) {
                 cout << "Goodbye!\n";
