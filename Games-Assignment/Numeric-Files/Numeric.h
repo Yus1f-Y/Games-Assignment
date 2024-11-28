@@ -86,7 +86,15 @@ public:
     }
 
     bool game_is_over() {
-        return (is_win() || is_draw());
+        if(is_win() || is_draw()) {
+            for(int i = 0; i < 3; i++) {
+                for(int j = 0; j < 3; j++) {
+                    turns[i][j] = 0;
+                }
+            }
+            return true;
+        }
+        return false;
     }
 };
 
@@ -98,7 +106,11 @@ public:
 
     void getmove(int& x, int& y) {
         cout << "\nPlease enter your move x and y (0 to 2) separated by spaces: ";
-        cin >> x >> y;
+        x = valid_choice(0, 2);
+        y = valid_choice(0, 2);
+        cout << "Enter the value to play in the place(bigger than 0 and smaller than 15: ";
+        int value = valid_choice(1, 14);
+        this->symbol = value;
     }
 
 };
@@ -112,6 +124,10 @@ public:
         cout << "\nPlease enter your move x and y (0 to 2) separated by spaces: ";
         x = rand() % 3;
         y = rand() % 3;
+        int value = rand() % 15;
+        if(value == 0) {
+            value++;
+        }
+        this->symbol = value;
     }
 };
-
