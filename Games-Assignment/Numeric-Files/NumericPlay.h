@@ -5,7 +5,6 @@
 using namespace std;
 
 template <typename T>
-// PlayGame Class
 class PlayNumericGame {
 private:
     Player<T>* firstPlayer = nullptr;
@@ -25,7 +24,7 @@ private:
 
     void setPlayers(bool vsComputer) {
         string name1, name2;
-        int symbol1, symbol2;
+        T symbol1, symbol2;
 
         cout << "Player 1, enter your name: ";
         cin.ignore();
@@ -94,39 +93,6 @@ public:
 
             GameManager<T>game(&board, players);
             game.run();
-
-            /*while (true) {
-
-                while (!board.game_is_over()) {
-                    board.display_board();
-                    playerTurn(firstPlayer, &board);
-                    board.display_board();
-                    if (board.is_win()) {
-                        announceWinner(firstPlayer);
-                        break;
-                    }
-                    if (board.is_draw()) {
-                        cout << "It's a draw!\n";
-                        break;
-                    }
-
-                    playerTurn(secondPlayer, &board);
-                    board.display_board();
-                    if (board.is_win()) {
-                        announceWinner(secondPlayer);
-                        break;
-                    }
-                    if (board.is_draw()) {
-                        cout << "It's a draw!\n";
-                        break;
-                    }
-                }
-
-                if (menu2() == 2) {
-                    cout << "Goodbye!\n";
-                    break;
-                }
-            }*/
 
             if (menu2() == 2) {
                 cout << "Goodbye!\n";
