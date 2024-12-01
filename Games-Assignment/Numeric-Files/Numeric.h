@@ -46,6 +46,12 @@ public:
             (turns[0][2] + turns[1][2] + turns[2][2] == 15 ) ||
             (turns[0][0] + turns[1][1] + turns[2][2] == 15 ) ||
             (turns[0][2] + turns[1][1] + turns[2][0] == 15 ) ) {
+
+            for(int i = 0; i < 3; i++) {
+                for(int j = 0; j < 3; j++) {
+                    turns[i][j] = 0;
+                }
+            }
             return true;
         }
 
@@ -64,6 +70,14 @@ public:
                 }
             }
         }
+
+
+        for(int i = 0; i < 3; i++) {
+            for(int j = 0; j < 3; j++) {
+                turns[i][j] = 0;
+            }
+        }
+
         return true;
     }
 
@@ -86,15 +100,7 @@ public:
     }
 
     bool game_is_over() {
-        if(is_win() || is_draw()) {
-            for(int i = 0; i < 3; i++) {
-                for(int j = 0; j < 3; j++) {
-                    turns[i][j] = 0;
-                }
-            }
-            return true;
-        }
-        return false;
+        return(is_win() || is_draw());
     }
 };
 
@@ -106,8 +112,7 @@ public:
 
     void getmove(int& x, int& y) {
         cout << "\nPlease enter your move x and y (0 to 2) separated by spaces: ";
-        x = valid_choice(0, 2);
-        y = valid_choice(0, 2);
+        cin >> x >> y;
         cout << "Enter the value to play in the place(bigger than 0 and smaller than 15: ";
         int value = valid_choice(1, 14);
         this->symbol = value;
