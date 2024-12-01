@@ -51,21 +51,11 @@ private:
         }
     }
 
-    /*static void playerTurn(Player<T>* player, Board<T>& board) {
-        int x, y;
-        while (true) {
-            player->getmove(x, y);
-            if (board.update_board(x, y, player->getsymbol())) {
-                break;
-            } else {
-                cout << "Invalid move. Try again.\n";
-            }
-        }
-    }*/
-
     static void announceWinner(Player<T>* winner) {
         cout << "The winner is " << winner->getname() << "!\n";
     }
+
+
 
 public:
 
@@ -89,32 +79,6 @@ public:
 
             GameManager<T>game(&board, players);
             game.run();
-
-                        /*
-                        while (!board.game_is_over()) {
-                            board.display_board();
-                            playerTurn(firstPlayer, board);
-                            board.display_board();
-                            if (board.is_win()) {
-                                announceWinner(firstPlayer);
-                                break;
-                            }
-                            if (board.is_draw()) {
-                                cout << "It's a draw!\n";
-                                break;
-                            }
-
-                            playerTurn(secondPlayer, board);
-                            board.display_board();
-                            if (board.is_win()) {
-                                announceWinner(secondPlayer);
-                                break;
-                            }
-                            if (board.is_draw()) {
-                                cout << "It's a draw!\n";
-                                break;
-                            }
-                        }*/
 
             if (menu2() == 2) {
                 cout << "Goodbye!\n";
