@@ -1,257 +1,173 @@
-#ifndef TicTacToe_5x5
-#define TicTacToe_5x5
+#ifndef _5X5_TIC_TAC_TOE_H
+#define _5X5_TIC_TAC_TOE_H
 
 #include "BoardGame_Classes.h"
+using namespace std;
+
+template <typename T>
+class FiveByFiveBoard : public Board<T> {
+public:
+    FiveByFiveBoard();
+    bool update_board(int x, int y, T mark);
+    void display_board();
+    bool is_win();
+    bool is_draw();
+    bool game_is_over();
+};
+
+template <typename T>
+class FiveByFivePlayer : public Player<T> {
+public:
+    FiveByFivePlayer(string name, T symbol);
+    void getmove(int& x, int& y);
+};
+
+template <typename T>
+class FiveByFiveRandomPlayer : public RandomPlayer<T> {
+public:
+    FiveByFiveRandomPlayer(T symbol);
+    void getmove(int& x, int& y);
+};
+
 #include <iostream>
+#include <iomanip>
 #include <cstdlib>
 #include <ctime>
-#include <limits>
 
 using namespace std;
 
 template <typename T>
-class TicTacToe5x5 : public Board<T>
-{
-public:
-    TicTacToe5x5()
-    {
-        this->rows = 5;
-        this->columns = 5;
-        this->board = new T *[this->rows];
-        for (int i = 0; i < this->rows; i++)
-        {
-            this->board[i] = new T[this->columns];
-            for (int j = 0; j < this->columns; j++)
-            {
-                this->board[i][j] = ' '; // Initialize the board with empty spaces
-            }
-        }
-        srand(time(0)); // set/edit Random numbers
-    }
-
-    bool update_board(int x, int y, T symbol) override
-    {
-        if (x >= 0 && x < this->rows && y >= 0 && y < this->columns && this->board[x][y] == ' ')
-        {
-            this->board[x][y] = symbol;
-            this->n_moves++;
-            return true;
-        }
-        return false;
-    }
-
-    void display_board() override
-    {
-        for (int i = 0; i < this->rows; i++)
-        {
-            for (int j = 0; j < this->columns; j++)
-            {
-                cout << (this->board[i][j] == ' ' ? '-' : this->board[i][j]);
-                if (j < this->columns - 1)
-                {
-                    cout << " | ";
-                }
-            }
-            cout << endl;
-            if (i < this->rows - 1)
-            {
-                cout << string(this->columns * 4 - 1, '-') << endl;
-            }
+FiveByFiveBoard<T>::FiveByFiveBoard() {
+    this->rows = this->columns = 5;
+    this->board = new char*[this->rows];
+    for (int i = 0; i < this->rows; i++) {
+        this->board[i] = new char[this->columns];
+        for (int j = 0; j < this->columns; j++) {
+            this->board[i][j] = 0;
         }
     }
-
-    bool is_win() override
-    {
-        // check win horizontally
-        for (int i = 0; i < this->rows; i++)
-        {
-            for (int j = 0; j <= this->columns - 3; j++)
-            {
-                if (this->board[i][j] != ' ' &&
-                    this->board[i][j] == this->board[i][j + 1] &&
-                    this->board[i][j] == this->board[i][j + 2])
-                {
-                    return true;
-                }
-            }
-        }
-
-        // check win vertically
-        for (int j = 0; j < this->columns; j++)
-        {
-            for (int i = 0; i <= this->rows - 3; i++)
-            {
-                if (this->board[i][j] != ' ' &&
-                    this->board[i][j] == this->board[i + 1][j] &&
-                    this->board[i][j] == this->board[i + 2][j])
-                {
-                    return true;
-                }
-            }
-        }
-
-        // Check win diagonally --> left to right
-        for (int i = 0; i <= this->rows - 3; i++)
-        {
-            for (int j = 0; j <= this->columns - 3; j++)
-            {
-                if (this->board[i][j] != ' ' &&
-                    this->board[i][j] == this->board[i + 1][j + 1] &&
-                    this->board[i][j] == this->board[i + 2][j + 2])
-                {
-                    return true;
-                }
-            }
-        }
-
-        // Check win diagonally --> right to left
-        for (int i = 0; i <= this->rows - 3; i++)
-        {
-            for (int j = 2; j < this->columns; j++)
-            {
-                if (this->board[i][j] != ' ' &&
-                    this->board[i][j] == this->board[i + 1][j - 1] &&
-                    this->board[i][j] == this->board[i + 2][j - 2])
-                {
-                    return true;
-                }
-            }
-        }
-
-        // If no winner 
-        return false;
-    }
-
-    bool is_draw() override
-    {
-        return this->n_moves == (this->rows * this->columns);
-    }
-
-    bool game_is_over() override
-    {
-        return is_win() || is_draw();
-    }
-
-    void random_player(T symbol)
-    {
-        int x, y;
-        do
-        {
-            x = rand() % this->rows;
-            y = rand() % this->columns;
-        } while (this->board[x][y] != ' '); // Check if the cell is empty
-
-        update_board(x, y, symbol);
-        cout << "Random player (" << symbol << ") played at: (" << x << ", " << y << ")" << endl;
-    }
-};
-
-
-void playTicTacToe5x5()
-{
-    TicTacToe5x5<char> game;
-    cout << "\n--- Tic Tac Toe 5x5 ---\n";
-
-    // Player setup
-    string playerXName, playerOName;
-    int playerXType, playerOType;
-
-    do {
-        cout << "Enter Player X name: ";
-        cin >> playerXName;
-        if (playerXName.empty()) {
-            cout << "Name cannot be empty. Please enter a valid name." << endl;
-        }
-    } while (playerXName.empty());
-
-    do {
-        cout << "Choose Player X type:\n1. Human\n2. Random Computer\n";
-        cin >> playerXType;
-        if (cin.fail() || (playerXType != 1 && playerXType != 2)) {
-            cin.clear();
-            cin.ignore(numeric_limits<streamsize>::max(), '\n');
-            cout << "Invalid choice. Please enter 1 or 2." << endl;
-        }
-    } while (playerXType != 1 && playerXType != 2);
-
-    do {
-        cout << "Enter Player O name: ";
-        cin >> playerOName;
-        if (playerOName.empty()) {
-            cout << "Name cannot be empty. Please enter a valid name." << endl;
-        }
-    } while (playerOName.empty());
-
-    do {
-        cout << "Choose Player O type:\n1. Human\n2. Random Computer\n";
-        cin >> playerOType;
-        if (cin.fail() || (playerOType != 1 && playerOType != 2)) {
-            cin.clear();
-            cin.ignore(numeric_limits<streamsize>::max(), '\n');
-            cout << "Invalid choice Please enter 1 or 2." << endl;
-        }
-    } while (playerOType != 1 && playerOType != 2);
-
-    char currentPlayer = 'X';
-    string currentPlayerName = playerXName;
-    int currentPlayerType = playerXType;
-
-    game.display_board();
-
-    while (!game.game_is_over())
-    {
-        cout << currentPlayerName << " (" << currentPlayer << "), it's your turn." << endl;
-
-        if (currentPlayerType == 1) // Human
-        {
-            int x, y;
-            bool validInput = false;
-            while (!validInput) {
-                cout << "Enter row and column (0-4): ";
-                cin >> x >> y;
-
-                if (cin.fail() || x < 0 || x >= 5 || y < 0 || y >= 5) {
-                    cin.clear();
-                    cin.ignore(numeric_limits<streamsize>::max(), '\n');
-                    cout << "Invalid input. Please enter numbers between 0 and 4." << endl;
-                } else if (!game.update_board(x, y, currentPlayer)) {
-                    cout << "Cell is already occupied. Try again." << endl;
-                } else {
-                    validInput = true;
-                }
-            }
-        }
-        else if (currentPlayerType == 2) // Random Computer
-        {
-            game.random_player(currentPlayer);
-        }
-
-        // Switch to the next player
-        if (currentPlayer == 'X') {
-            currentPlayer = 'O';
-            currentPlayerName = playerOName;
-            currentPlayerType = playerOType;
-        } else {
-            currentPlayer = 'X';
-            currentPlayerName = playerXName;
-            currentPlayerType = playerXType;
-        }
-
-        game.display_board();
-    }
-
-    if (game.is_win()) {
-
-        if (currentPlayer == 'X') {
-            currentPlayer = 'O';
-            currentPlayerName = playerOName;
-        } else {
-            currentPlayer = 'X';
-            currentPlayerName = playerXName;
-        }
-        cout << "Congratulations, " << currentPlayerName << " You won the game." << endl;
-    } else if (game.is_draw()) {
-        cout << "It's a draw! No winner this time." << endl;
-    }
+    this->n_moves = 0;
 }
-#endif 
+
+template <typename T>
+bool FiveByFiveBoard<T>::update_board(int x, int y, T mark) {
+    if (x >= 0 && x < this->rows && y >= 0 && y < this->columns && this->board[x][y] == 0) {
+        this->board[x][y] = toupper(mark);
+        this->n_moves++;
+        return true;
+    }
+    return false;
+}
+
+template <typename T>
+void FiveByFiveBoard<T>::display_board() {
+    for (int i = 0; i < this->rows; i++) {
+        cout << "\n| ";
+        for (int j = 0; j < this->columns; j++) {
+            if (this->board[i][j] == 0) {
+                cout << "- | ";
+            } else {
+                cout << this->board[i][j] << " | ";
+            }
+        }
+        cout << "\n-------------------------";
+    }
+    cout << endl;
+}
+
+template <typename T>
+bool FiveByFiveBoard<T>::is_win() {
+    for (int i = 0; i < this->rows; i++) {
+        for (int j = 0; j < this->columns - 2; j++) {
+            if (this->board[i][j] == this->board[i][j+1] && this->board[i][j+1] == this->board[i][j+2] && this->board[i][j] != 0)
+                return true;
+        }
+    }
+    for (int j = 0; j < this->columns; j++) {
+        for (int i = 0; i < this->rows - 2; i++) {
+            if (this->board[i][j] == this->board[i+1][j] && this->board[i+1][j] == this->board[i+2][j] && this->board[i][j] != 0)
+                return true;
+        }
+    }
+    for (int i = 0; i < this->rows - 2; i++) {
+        for (int j = 0; j < this->columns - 2; j++) {
+            if (this->board[i][j] == this->board[i+1][j+1] && this->board[i+1][j+1] == this->board[i+2][j+2] && this->board[i][j] != 0)
+                return true;
+            if (this->board[i][j+2] == this->board[i+1][j+1] && this->board[i+1][j+1] == this->board[i+2][j] && this->board[i][j+2] != 0)
+                return true;
+        }
+    }
+    return false;
+}
+
+template <typename T>
+bool FiveByFiveBoard<T>::is_draw() {
+    return this->n_moves == 24 && !is_win();
+}
+
+template <typename T>
+bool FiveByFiveBoard<T>::game_is_over() {
+    return is_win() || is_draw();
+}
+
+template <typename T>
+FiveByFivePlayer<T>::FiveByFivePlayer(string name, T symbol) : Player<T>(name, symbol) {}
+
+template <typename T>
+void FiveByFivePlayer<T>::getmove(int& x, int& y) {
+    cout << "\nEnter your move (x y): ";
+    cin >> x >> y;
+}
+
+template <typename T>
+FiveByFiveRandomPlayer<T>::FiveByFiveRandomPlayer(T symbol) : RandomPlayer<T>(symbol) {
+    srand(static_cast<unsigned int>(time(0)));
+}
+
+template <typename T>
+void FiveByFiveRandomPlayer<T>::getmove(int& x, int& y) {
+    x = rand() % 5;
+    y = rand() % 5;
+}
+
+void _5x5TicTacToe() {
+    Player<char> *players[2];
+    string playerXName, player2Name;
+
+    FiveByFiveBoard<char> *B = new FiveByFiveBoard<char>();
+
+    cin.ignore();
+
+    cout << "Enter Player X name: ";
+    getline(cin, playerXName);
+    players[0] = new FiveByFivePlayer<char>(playerXName, 'X');
+
+    int choice;
+    cout << "Choose Player 2 type:\n";
+    cout << "1. Human\n";
+    cout << "2. Random Computer\n";
+    cin >> choice;
+
+    cin.ignore();
+
+   
+    while (choice != 1 && choice != 2) {  
+        cout << "Invalid choice for Player 2. Please enter 1 for Human or 2 for Random Computer: ";
+        cin >> choice;
+        cin.ignore(); 
+    }
+
+    if (choice == 1) {
+        cout << "Enter Player 2 name: ";
+        getline(cin, player2Name);
+        players[1] = new FiveByFivePlayer<char>(player2Name, 'O');
+    }
+    else if (choice == 2) {
+        players[1] = new FiveByFiveRandomPlayer<char>('O');
+    }
+
+    GameManager<char> game(B, players);
+    game.run();
+}
+
+#endif //_5X5_TIC_TAC_TOE_H
